@@ -33,45 +33,84 @@ BabyGrok-Project/
 ├── data/                 # 存放处理好的二进制训练数据 (如 train.bin)
 ├── out/                  # 存放训练输出的模型权重 (如 model_latest.pth)
 └── README.md             # 项目说明文档
-🚀 快速开始 (保姆级教程)
-1. 环境准备
+```
+
+## 🚀 快速开始 (保姆级教程)
+
+### 1. 环境准备
+
 确保你的电脑安装了 Python，并建议配备一张 NVIDIA 显卡 (需安装 CUDA)。
 打开终端，安装所需的依赖库：
-code
-Bash
+
+```
 pip install torch numpy tiktoken datasets
-2. 准备“饲料” (数据处理)
+```
+
+### 2. 准备“饲料” (数据处理)
+
 模型需要阅读大量的文本才能学会说话。运行以下脚本，它会自动下载测试数据集（如 TinyStories）并将其编码为模型认识的二进制格式 train.bin。
-code
-Bash
+
+```
 python prepare_data.py
-(注：处理完成后，data/ 目录下会生成一个 .bin 文件。)
-3. 开始炼丹 (模型训练)
+```
+
+*(注：处理完成后，data/ 目录下会生成一个 .bin 文件。)*
+
+### 3. 开始炼丹 (模型训练)
+
 启动训练脚本。脚本会自动检测你是否有 GPU。
-code
-Bash
+
+```
 python train.py
-训练提示：
-刚开始的 Step 0 可能会卡顿 10-20 秒，这是显卡在进行 CUDA 预热，属正常现象。
-观察终端输出的 Loss 值，如果它从 10.x 逐渐下降到 3.0 以下，说明模型正在变聪明！
-训练过程中如果想提前结束，可以直接按 Ctrl+C，代码会自动保存当前的进度为 model_interrupted.pth。
-4. 见证奇迹 (与模型对话)
+```
+
+**训练提示：**
+
+- 刚开始的 Step 0 可能会卡顿 10-20 秒，这是显卡在进行 CUDA 预热，属正常现象。
+- 观察终端输出的 Loss 值，如果它从 10.x 逐渐下降到 3.0 以下，说明模型正在变聪明！
+- 训练过程中如果想提前结束，可以直接按 Ctrl+C，代码会自动保存当前的进度为 model_interrupted.pth。
+
+### 4. 见证奇迹 (与模型对话)
+
 当训练完成（或你在中途保存了模型权重），运行聊天脚本：
-code
-Bash
+
+```
 python chat.py
+```
+
 在终端中输入一段英文开头（例如 "Once upon a time"），按下回车，看着你的 BabyGrok 逐字续写故事吧！
-🛠️ 进阶配置与显存调优 (OOM 救星)
+
+------
+
+
+
+## 🛠️ 进阶配置与显存调优 (OOM 救星)
+
 如果你在运行 train.py 时遇到了 CUDA Out of Memory (爆显存) 错误，或者觉得训练太慢，请打开 config.py 进行调整：
-如果爆显存 (OOM)：调小 batch_size（如 64 -> 32 -> 16），或者减小 dim（如 256 -> 128）。
-如果显卡占用率低 (GPU 摸鱼)：调大 batch_size，让数据填满你的显存（建议显存占用保持在 85% 左右最佳）。
-如果想让模型更聪明：在显存允许的情况下，增加 n_layers (层数) 和 dim (维度)，并准备更多的数据进行更长时间的训练。
-🎓 学习路线指南
+
+- **如果爆显存 (OOM)**：调小 batch_size（如 64 -> 32 -> 16），或者减小 dim（如 256 -> 128）。
+- **如果显卡占用率低 (GPU 摸鱼)**：调大 batch_size，让数据填满你的显存（建议显存占用保持在 85% 左右最佳）。
+- **如果想让模型更聪明**：在显存允许的情况下，增加 n_layers (层数) 和 dim (维度)，并准备更多的数据进行更长时间的训练。
+
+------
+
+
+
+## 🎓 学习路线指南
+
 如果你想看懂 model.py 里的代码，建议按照以下顺序阅读：
-Expert 类：最基础的全连接神经网络。
-MoELayer 类：理解 Router 是如何打分，并通过 Mask (掩码) 将数据分发给特定专家的。
-CausalSelfAttention 类：理解 Q、K、V 是如何计算相关性，以及下三角矩阵是如何防止模型“偷看未来”的。
-Block 与 BabyGrok 类：看懂积木是如何一层层拼装起来的。
-🙏 致谢
-感谢 xAI Grok-1 提供的 MoE 架构灵感。
-感谢 Andrej Karpathy 的教学项目带来的启发，本项目致力于用同样大道至简的理念降低大模型学习门槛。
+
+1. 
+2. **Expert 类**：最基础的全连接神经网络。
+3. **MoELayer 类**：理解 Router 是如何打分，并通过 Mask (掩码) 将数据分发给特定专家的。
+4. **CausalSelfAttention 类**：理解 Q、K、V 是如何计算相关性，以及下三角矩阵是如何防止模型“偷看未来”的。
+5. **Block 与 BabyGrok 类**：看懂积木是如何一层层拼装起来的。
+
+------
+
+
+
+## 🙏 致谢
+
+- 感谢 **[xAI Grok-1](https://www.google.com/url?sa=E&q=https%3A%2F%2Fgithub.com%2Fxai-org%2Fgrok-1)** 提供的 MoE 架构灵感。
+- 感谢 **[Andrej Karpathy](https://www.google.com/url?sa=E&q=https%3A%2F%2Fgithub.com%2Fkarpathy%2FnanoGPT)** 的教学项目带来的启发，本项目致力于用同样大道至简的理念降低大模型学习门槛。
