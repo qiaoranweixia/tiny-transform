@@ -4,7 +4,7 @@ import torch
 
 @dataclass
 class ModelConfig:
-    # 模型架构参数
+    # #模型架构参数
     dim: int = 256  # 嵌入维度 (由小开始，显卡好可改为 512/768)
     n_layers: int = 6  # Transformer 层数
     n_heads: int = 8  # 注意力头数
@@ -21,4 +21,5 @@ class ModelConfig:
     learning_rate: float = 3e-4
     max_iters: int = 5000  # 训练步数
     eval_interval: int = 200  # 每多少步打印一次 loss
+
     device: str = 'cuda' if torch.cuda.is_available() else 'cpu'
